@@ -1,12 +1,12 @@
-name: CI - PR & Build Checks
+name: CI - PR & Build Checks [Manual Trigger]
 
 on:
   workflow_dispatch:
     inputs:
       environment:
-        description: "Environment to build"
+        description: 'Environment to build'
         required: true
-        default: "staging"
+        default: 'staging'
         type: choice
         options:
           - staging
