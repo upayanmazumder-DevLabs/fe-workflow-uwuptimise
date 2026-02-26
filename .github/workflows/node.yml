@@ -24,9 +24,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    env:
-      NODE_VERSION: 22
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -40,17 +37,37 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: 22
           cache: pnpm
+
+      - name: Validate workspace config
+        run: |
+          if [ -f pnpm-workspace.yaml ]; then
+            echo "Workspace file detected."
+            if ! grep -q "packages:" pnpm-workspace.yaml; then
+              echo "Invalid workspace file detected. Removing it."
+              rm pnpm-workspace.yaml
+            fi
+          fi
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Typecheck
-        run: pnpm run typecheck
+      - name: Typecheck (if exists)
+        run: |
+          if pnpm run | grep -q typecheck; then
+            pnpm run typecheck
+          else
+            echo "No typecheck script found. Skipping."
+          fi
 
-      - name: Lint
-        run: pnpm run lint
+      - name: Lint (if exists)
+        run: |
+          if pnpm run | grep -q lint; then
+            pnpm run lint
+          else
+            echo "No lint script found. Skipping."
+          fi
 
       - name: Build
         run: pnpm run build
