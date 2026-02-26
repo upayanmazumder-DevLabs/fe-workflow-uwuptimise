@@ -2,15 +2,15 @@ name: CI - PR & Build Checks
 
 on:
   pull_request:
-    branches: ["staging", "prod"]
+    branches: ['staging', 'prod']
   push:
-    branches: ["staging", "prod"]
+    branches: ['staging', 'prod']
   workflow_dispatch:
     inputs:
       environment:
-        description: "Environment to build"
+        description: 'Environment to build'
         required: true
-        default: "staging"
+        default: 'staging'
         type: choice
         options:
           - staging
